@@ -1,0 +1,10 @@
+NOTE: I will make a engine with "from bottom to top" method.
+
+1. encapsulate opengl as a render device
+   a. data object
+   b. pipeline api
+
+
+
+   
+
