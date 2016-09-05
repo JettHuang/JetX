@@ -7,3 +7,5 @@
 # Precompiled Headers
 *.gch
 *.pch
+
+*.sdf

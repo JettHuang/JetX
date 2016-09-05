@@ -154,12 +154,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Src\OpenGL\GLBuffer.cpp" />
+    <ClCompile Include="..\Src\OpenGL\GLShader.cpp" />
     <ClCompile Include="..\Src\OpenGL\OpenGLDrv.cpp" />
     <ClCompile Include="..\Src\UnitTests\hellotriangle2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Src\Common\RefCounting.h" />
     <ClInclude Include="..\Src\OpenGL\GLBuffer.h" />
+    <ClInclude Include="..\Src\OpenGL\GLShader.h" />
+    <ClInclude Include="..\Src\OpenGL\GLVertexDeclaration.h" />
     <ClInclude Include="..\Src\OpenGL\OpenGLDrv.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

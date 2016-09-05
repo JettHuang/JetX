@@ -1,10 +1,19 @@
 NOTE: I will make a engine with "from bottom to top" method.
 
 1. encapsulate opengl as a render device
-   a. data object
-   b. pipeline api
-
-
+   NOTE: GPU Resource
+   
+   a. OpenGL Device
+   b. VertexBufferRHI
+   c. IndexBufferRHI
+   d. Shader & ProgramRHI
+   e. VertexDeclarationRHI
+   f. Stream Source
+   
+2. CPU Resource
+   a. VertexBuffer
+   b. VertexFactory
+   
 
    
 

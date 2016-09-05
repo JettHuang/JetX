@@ -31,7 +31,8 @@ int main()
 {
     std::cout << "Starting GLFW context, OpenGL 3.3" << std::endl;
 
-	FOpenGLDrv::SharedInstance().Initialize();
+	FOpenGLDrv &GLDriver = FOpenGLDrv::SharedInstance();
+	GLDriver.Initialize();
 
     // Init GLFW
     glfwInit();
@@ -53,7 +54,7 @@ int main()
     glfwGetFramebufferSize(window, &width, &height);
     glViewport(0, 0, width, height);
 
-
+#if 0
     // Build and compile our shader program
     // Vertex shader
     GLint vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -92,6 +93,17 @@ int main()
     }
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
+#else
+	FOpenGLVertexShaderRef VertexShaderRef = GLDriver.CreateVertexShader(vertexShaderSource);
+	FOpenGLPixelShaderRef PixelShaderRef = GLDriver.CreatePixelShader(fragmentShaderSource);
+	FOpenGLProgramRef ProgramRef = GLDriver.CreateProgram(VertexShaderRef, PixelShaderRef);
+
+	VertexShaderRef->DumpDebugInfo();
+	PixelShaderRef->DumpDebugInfo();
+	ProgramRef->DumpDebugInfo();
+
+	GLint shaderProgram = ProgramRef->GetGLResource();
+#endif
 
 
     // Set up vertex data (and buffer(s)) and attribute pointers

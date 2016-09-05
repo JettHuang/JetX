@@ -16,6 +16,12 @@
     <ClCompile Include="..\Src\OpenGL\OpenGLDrv.cpp">
       <Filter>OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="..\Src\OpenGL\GLBuffer.cpp">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\OpenGL\GLShader.cpp">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Src\OpenGL\OpenGLDrv.h">
@@ -26,6 +32,12 @@
     </ClInclude>
     <ClInclude Include="..\Src\Common\RefCounting.h">
       <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\OpenGL\GLShader.h">
+      <Filter>OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\OpenGL\GLVertexDeclaration.h">
+      <Filter>OpenGL</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
