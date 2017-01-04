@@ -88,7 +88,7 @@ int main()
 	Cube->InitRHI();
 
 	// Load Model
-	FModelRef Model = FModel::CreateModel("objects/MD5/Bob.md5mesh");
+	FModelRef Model = FModel::CreateModel("objects/md5/boblampclean.md5mesh");
 	assert(IsValidRef(Model));
 	Model->InitRHI();
 	Model->Play(0);

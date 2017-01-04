@@ -119,7 +119,8 @@ FTexture2DRef FTexture2D::CreateTexture(const std::string &InFilename)
 void FTexture2D::LoadFromFile(const std::string &InFilename)
 {
 	SafeReleaseData();
-	ImageData = SOIL_load_image(InFilename.c_str(), &Width, &Height, nullptr, SOIL_LOAD_RGB);
+	int channels = 0;
+	ImageData = SOIL_load_image(InFilename.c_str(), &Width, &Height, &channels, SOIL_LOAD_RGB);
 	if (!ImageData)
 	{
 		std::cout << "FTexture2D::LoadFromFile Failed: " << InFilename.c_str() << std::endl;
