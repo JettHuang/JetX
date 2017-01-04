@@ -10,9 +10,26 @@
     <Filter Include="Common">
       <UniqueIdentifier>{9b9a4de8-e15e-48ad-b034-53ab9c7945b7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="TestCase">
+      <UniqueIdentifier>{e9316464-399a-4b2c-9f84-a5f1d631059d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\glm">
+      <UniqueIdentifier>{37f235e7-edd1-45d5-9a3a-40dbc35a0a8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\GL">
+      <UniqueIdentifier>{4e1472d7-0c28-477b-8ee2-27cd4a17fe0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\GLFW">
+      <UniqueIdentifier>{45dedb11-814a-4811-803d-0305665651c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\assimp">
+      <UniqueIdentifier>{8f0f4750-de6c-4ee7-9b6a-720a73410724}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{8ea6547e-cb97-49bc-99dc-56bb45ab1ae0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Src\UnitTests\hellotriangle2.cpp" />
     <ClCompile Include="..\Src\OpenGL\OpenGLDrv.cpp">
       <Filter>OpenGL</Filter>
     </ClCompile>
@@ -21,6 +38,45 @@
     </ClCompile>
     <ClCompile Include="..\Src\OpenGL\GLShader.cpp">
       <Filter>OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\OpenGL\GLVertexDeclaration.cpp">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Common\UtilityHelper.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\OpenGL\GLTexture.cpp">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\OpenGL\GLShaderParameter.cpp">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\UnitTests\TestMain.cpp">
+      <Filter>TestCase</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Scene\RenderResource.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Scene\Model.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Scene\Mesh.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\OpenGL\GLFrameBuffer.cpp">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\OpenGL\GLRenderBuffer.cpp">
+      <Filter>OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Scene\ShaderType.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Scene\SkinMesh.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Scene\LinesBatch.cpp">
+      <Filter>Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -39,5 +95,268 @@
     <ClInclude Include="..\Src\OpenGL\GLVertexDeclaration.h">
       <Filter>OpenGL</Filter>
     </ClInclude>
+    <ClInclude Include="..\Src\OpenGL\OpenGLState.h">
+      <Filter>OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\Common\UtilityHelper.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\OpenGL\GLTexture.h">
+      <Filter>OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\OpenGL\GLShaderParameter.h">
+      <Filter>OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\UnitTests\hellotriangle2.h">
+      <Filter>TestCase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\UnitTests\test_texture.h">
+      <Filter>TestCase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\Scene\Camera.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\UnitTests\test_camera.h">
+      <Filter>TestCase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\Scene\RenderResource.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\Scene\Mesh.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\Scene\Model.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\Scene\Scene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\UnitTests\test_model.h">
+      <Filter>TestCase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\Scene\Render.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\UnitTests\model_rendered.h">
+      <Filter>TestCase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\OpenGL\GLFrameBuffer.h">
+      <Filter>OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\OpenGL\GLRenderBuffer.h">
+      <Filter>OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\UnitTests\test_framebuffer.h">
+      <Filter>TestCase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\UnitTests\geometry_shader_houses.h">
+      <Filter>TestCase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\UnitTests\instancing_asteroids_instanced.h">
+      <Filter>TestCase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\UnitTests\gamma_recorrect.h">
+      <Filter>TestCase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\UnitTests\shadow_mapping.h">
+      <Filter>TestCase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\UnitTests\test_shadow_mapping.h">
+      <Filter>TestCase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\Scene\ShaderType.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\UnitTests\normal_mapping.h">
+      <Filter>TestCase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\UnitTests\test_bloom.h">
+      <Filter>TestCase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\UnitTests\deferred_shading.h">
+      <Filter>TestCase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\UnitTests\test_deferred_shading.h">
+      <Filter>TestCase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\UnitTests\ssao.h">
+      <Filter>TestCase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\UnitTests\test_ssao.h">
+      <Filter>TestCase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\UnitTests\test_model_animation.h">
+      <Filter>TestCase</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\Scene\SkinMesh.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Src\Scene\LinesBatch.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Data\shaders\test_texture.frag">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\test_texture.vs">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\coordinate_systems.frag">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\coordinate_systems.vs">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\test_model.frag">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\test_model.vs">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\fullscreen_quad.frag">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\fullscreen_quad.vs">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\geometry_shader.frag">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\geometry_shader.gs">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\geometry_shader.vs">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\instanced_asteroids.frag">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\instanced_asteroids.vs">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\planet.frag">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\planet.vs">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\gamma_correct.frag">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\gamma_correct.vs">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\test_shadow_mapping_lighting.frag">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\test_shadow_mapping_lighting.vs">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\test_shadow_mapping_depth.frag">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\test_shadow_mapping_depth.vs">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\test_shadow_mapping_showdepth.frag">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\test_shadow_mapping_showdepth.vs">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\normal_mapping.frag">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\normal_mapping.vs">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\bloom_pass1.frag">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\bloom_pass1.vs">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\bloom_pass1_drawlight.frag">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\bloom_debug_quad.frag">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\bloom_debug_quad.vs">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\bloom_blur.frag">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\bloom_blur.vs">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\bloom_final.frag">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\bloom_final.vs">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\deferred_light_box.frag">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\deferred_light_box.vs">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\deferred_shading.frag">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\deferred_shading.vs">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\g_buffer.frag">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\g_buffer.vs">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\test_g_buffer.frag">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\test_g_buffer.vs">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\test_deferred_light_box.frag">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\test_deferred_light_box.vs">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\test_deferred_shading.frag">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\test_deferred_shading.vs">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\test_ssao.frag">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\test_ssao.vs">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\test_ssao_blur.frag">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\test_ssao_gbuffer.frag">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\test_ssao_gbuffer.vs">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\test_ssao_lighting.frag">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\skeleton_mesh.frag">
+      <Filter>TestCase</Filter>
+    </None>
+    <None Include="..\Data\shaders\skeleton_mesh.vs">
+      <Filter>TestCase</Filter>
+    </None>
   </ItemGroup>
 </Project>

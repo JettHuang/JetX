@@ -6,6 +6,7 @@
 #define __JETX_GL_VERTEX_DECLARATION_H__
 
 #include <GL/glew.h>
+#include <vector>
 #include <Common/RefCounting.h>
 
 
@@ -31,27 +32,87 @@ enum EVertexElementType
 	VET_UShort2N,		// 16 bit word normalized to (value/65535.0,value/65535.0,0,0,1)
 	VET_UShort4N,		// 4 X 16 bit word unsigned, normalized 
 	VET_URGB10A2N,		// 10 bit r, g, b and 2 bit a normalized to (value/1023.0f, value/1023.0f, value/1023.0f, value/3.0f)
+	VET_Int1,
+	VET_Int2,
+	VET_Int3,
+	VET_Int4,
 	VET_MAX
 };
 
 // vertex element
 struct FVertexElement
 {
-	unsigned char 		StreamIndex;
-	unsigned char 		Offset;
-	unsigned short 		AttributeIndex;	
+	unsigned short 		StreamIndex;
+	unsigned short 		AttributeIndex;
+	unsigned short 		Offset;
+	unsigned short 		Stride;
 	EVertexElementType	DataType;
-	unsigned int 		Stride;
 	
 	FVertexElement() {}
+	FVertexElement(unsigned short InStreamIndex, unsigned short InAttriIndex, unsigned short InOffset, unsigned short InStride, EVertexElementType InType)
+		: StreamIndex(InStreamIndex)
+		, AttributeIndex(InAttriIndex)
+		, Offset(InOffset)
+		, Stride(InStride)
+		, DataType(InType)
+	{
+	}
 };
+
+typedef std::vector<FVertexElement>		FVertexElementsList;
+
+
+// GL vertex element
+struct FOpenGLVertexElement
+{
+	GLuint		StreamIndex;
+	GLuint		AttributeIndex;
+	GLint		Size;
+	GLenum		Type;
+	GLsizei		Stride;
+	GLuint		Offset;
+	GLboolean	Normalized;
+	GLboolean	ShouldConvertToFloat;
+
+	FOpenGLVertexElement() {}
+
+	FOpenGLVertexElement(GLuint InStreamIndex, GLuint InAttributeIndex, GLint InSize, GLenum InType, GLsizei InStride, GLuint InOffset, GLboolean InNormalized,
+		GLboolean InShouldConvertToFloat)
+		: StreamIndex(InStreamIndex)
+		, AttributeIndex(InAttributeIndex)
+		, Size(InSize)
+		, Type(InType)
+		, Stride(InStride)
+		, Offset(InOffset)
+		, Normalized(InNormalized)
+		, ShouldConvertToFloat(InShouldConvertToFloat)
+	{}
+
+	void SetValue(GLuint InStreamIndex, GLuint InAttributeIndex, GLint InSize, GLenum InType, GLsizei InStride, GLuint InOffset, GLboolean InNormalized, GLboolean InShouldConvertToFloat)
+	{
+		StreamIndex = InStreamIndex;
+		AttributeIndex = InAttributeIndex;
+		Size = InSize;
+		Type = InType;
+		Stride = InStride;
+		Offset = InOffset;
+		Normalized = InNormalized;
+		ShouldConvertToFloat = InShouldConvertToFloat;
+	}
+};
+
+typedef std::vector<FOpenGLVertexElement>  FOpenGLVertexElementsList;
 
 // vertex declaration
 class FOpenGLVertexDeclaration : public FRefCountedObject
 {
 public:
+	FOpenGLVertexDeclaration(const FVertexElementsList &InVertexElements);
 
+	FOpenGLVertexElementsList	GLVertexElements;
 };
+
+typedef TRefCountPtr<FOpenGLVertexDeclaration>		FOpenGLVertexDeclarationRef;
 
 
 #endif // __JETX_GL_VERTEX_DECLARATION_H__

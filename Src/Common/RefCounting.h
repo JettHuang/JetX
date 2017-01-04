@@ -119,6 +119,11 @@ public:
 		return Reference;
 	}
 
+	ReferencedType* DeRef() const
+	{
+		return Reference;
+	}
+
 	void SafeRelease()
 	{
 		*this = nullptr;
@@ -144,6 +149,6 @@ private:
 	ReferencedType	*Reference;
 };
 
-
+typedef TRefCountPtr<FRefCountedObject>		FRefCountedObjectRef;
 
 #endif // __JETX_REFCOUNTING_H__

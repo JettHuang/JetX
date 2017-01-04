@@ -1,0 +1,110 @@
+Starting GLFW context, OpenGL 3.3
+======== Load Shader: shaders/test_model.vs, shaders/test_model.frag
+GL-Shader Dump Debug Info:
+    CompileStatus: GL_TRUE
+    Info Log: 
+GL-Shader Dump Debug Info:
+    CompileStatus: GL_TRUE
+    Info Log: 
+GL-Program Dump Debug Info:
+    LinkStatus: GL_TRUE
+    Active Attributes Count: 2
+    Active Uniforms Count: 4
+    Info Log: 
+    Attributes List: 
+       name=position, type=GL_FLOAT_VEC3, size=1, location=0
+       name=texcoord0, type=GL_FLOAT_VEC2, size=1, location=2
+    Uniform Params List:
+       name=model, type=GL_FLOAT_MAT4, size=1, location=0
+       name=projection, type=GL_FLOAT_MAT4, size=1, location=1
+       name=view, type=GL_FLOAT_MAT4, size=1, location=2
+       name=diffuseTex, type=GL_SAMPLER_2D, size=1, location=3
+======== Load Shader: shaders/skeleton_mesh.vs, shaders/skeleton_mesh.frag
+GL-Shader Dump Debug Info:
+    CompileStatus: GL_TRUE
+    Info Log: 
+GL-Shader Dump Debug Info:
+    CompileStatus: GL_TRUE
+    Info Log: 
+GL-Program Dump Debug Info:
+    LinkStatus: GL_TRUE
+    Active Attributes Count: 4
+    Active Uniforms Count: 5
+    Info Log: 
+    Attributes List: 
+       name=indices, type=GL_INT_VEC4, size=1, location=5
+       name=position, type=GL_FLOAT_VEC3, size=1, location=0
+       name=texcoord0, type=GL_FLOAT_VEC2, size=1, location=2
+       name=weights, type=GL_FLOAT_VEC4, size=1, location=6
+    Uniform Params List:
+       name=bone_mats[0], type=GL_FLOAT_MAT4, size=40, location=0
+       name=model, type=GL_FLOAT_MAT4, size=1, location=40
+       name=projection, type=GL_FLOAT_MAT4, size=1, location=41
+       name=view, type=GL_FLOAT_MAT4, size=1, location=42
+       name=diffuseTex, type=GL_SAMPLER_2D, size=1, location=43
+======== Load Shader: shaders/draw_line.vs, shaders/draw_line.frag
+GL-Shader Dump Debug Info:
+    CompileStatus: GL_TRUE
+    Info Log: 
+GL-Shader Dump Debug Info:
+    CompileStatus: GL_TRUE
+    Info Log: 
+GL-Program Dump Debug Info:
+    LinkStatus: GL_TRUE
+    Active Attributes Count: 1
+    Active Uniforms Count: 3
+    Info Log: 
+    Attributes List: 
+       name=position, type=GL_FLOAT_VEC3, size=1, location=0
+    Uniform Params List:
+       name=model, type=GL_FLOAT_MAT4, size=1, location=0
+       name=projection, type=GL_FLOAT_MAT4, size=1, location=1
+       name=view, type=GL_FLOAT_MAT4, size=1, location=2
+Assimp_ProcessMaterialTexture: objects/MD5/guard1_body.png
+Assimp_ProcessMaterialTexture: objects/MD5/guard1_face.png
+Assimp_ProcessMaterialTexture: objects/MD5/guard1_helmet.png
+Assimp_ProcessMaterialTexture: objects/MD5/iron_grill.png
+Assimp_ProcessMaterialTexture: objects/MD5/round_grill.png
+Assimp_ProcessMaterialTexture: objects/MD5/guard1_body.png
+Info: Import A Skinning Mesh
+Info: Import A Skinning Mesh
+Info: Import A Skinning Mesh
+Info: Import A Skinning Mesh
+Info: Import A Skinning Mesh
+Info: Import A Skinning Mesh
+<MD5_Root>
+    <MD5_Mesh>  with meshes<, , , , , , >
+    <MD5_Hierarchy>
+        origin
+            sheath
+                sword
+            pubis
+                pelvis
+                    spine
+                        neck
+                            head
+                        upperarm.L
+                            forearm.L
+                                wrist.L
+                                    thumb.L
+                                        thm_end.L
+                                    fingers.L
+                                        fingerstip.L
+                                        lamp
+                        upperarm.R
+                            forearm.R
+                                wrist.R
+                                    thumb.R
+                                        thm_end.R
+                                    fingers.R
+                                        fingerstip.R
+                thigh.R
+                    shin.R
+                        ankle.R
+                            toe.R
+                                tiptoe.R
+                thigh.L
+                    shin.L
+                        ankle.L
+                            toe.L
+                                tiptoe.L

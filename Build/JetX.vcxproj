@@ -94,8 +94,9 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;glew32s.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;glew32s.lib;SOIL.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../Src/ThirdParty/lib</AdditionalLibraryDirectories>
+      <OutputFile>$(SolutionDir)..\Bin\$(TargetName)$(TargetExt)</OutputFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -154,17 +155,118 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Src\Common\UtilityHelper.cpp" />
     <ClCompile Include="..\Src\OpenGL\GLBuffer.cpp" />
+    <ClCompile Include="..\Src\OpenGL\GLFrameBuffer.cpp" />
+    <ClCompile Include="..\Src\OpenGL\GLRenderBuffer.cpp" />
     <ClCompile Include="..\Src\OpenGL\GLShader.cpp" />
+    <ClCompile Include="..\Src\OpenGL\GLShaderParameter.cpp" />
+    <ClCompile Include="..\Src\OpenGL\GLTexture.cpp" />
+    <ClCompile Include="..\Src\OpenGL\GLVertexDeclaration.cpp" />
     <ClCompile Include="..\Src\OpenGL\OpenGLDrv.cpp" />
-    <ClCompile Include="..\Src\UnitTests\hellotriangle2.cpp" />
+    <ClCompile Include="..\Src\Scene\LinesBatch.cpp" />
+    <ClCompile Include="..\Src\Scene\Mesh.cpp" />
+    <ClCompile Include="..\Src\Scene\Model.cpp" />
+    <ClCompile Include="..\Src\Scene\RenderResource.cpp" />
+    <ClCompile Include="..\Src\Scene\ShaderType.cpp" />
+    <ClCompile Include="..\Src\Scene\SkinMesh.cpp" />
+    <ClCompile Include="..\Src\UnitTests\TestMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Src\Common\RefCounting.h" />
+    <ClInclude Include="..\Src\Common\UtilityHelper.h" />
     <ClInclude Include="..\Src\OpenGL\GLBuffer.h" />
+    <ClInclude Include="..\Src\OpenGL\GLFrameBuffer.h" />
+    <ClInclude Include="..\Src\OpenGL\GLRenderBuffer.h" />
     <ClInclude Include="..\Src\OpenGL\GLShader.h" />
+    <ClInclude Include="..\Src\OpenGL\GLShaderParameter.h" />
+    <ClInclude Include="..\Src\OpenGL\GLTexture.h" />
     <ClInclude Include="..\Src\OpenGL\GLVertexDeclaration.h" />
     <ClInclude Include="..\Src\OpenGL\OpenGLDrv.h" />
+    <ClInclude Include="..\Src\OpenGL\OpenGLState.h" />
+    <ClInclude Include="..\Src\Scene\Camera.h" />
+    <ClInclude Include="..\Src\Scene\LinesBatch.h" />
+    <ClInclude Include="..\Src\Scene\Mesh.h" />
+    <ClInclude Include="..\Src\Scene\Model.h" />
+    <ClInclude Include="..\Src\Scene\Render.h" />
+    <ClInclude Include="..\Src\Scene\RenderResource.h" />
+    <ClInclude Include="..\Src\Scene\Scene.h" />
+    <ClInclude Include="..\Src\Scene\ShaderType.h" />
+    <ClInclude Include="..\Src\Scene\SkinMesh.h" />
+    <ClInclude Include="..\Src\UnitTests\deferred_shading.h" />
+    <ClInclude Include="..\Src\UnitTests\gamma_recorrect.h" />
+    <ClInclude Include="..\Src\UnitTests\geometry_shader_houses.h" />
+    <ClInclude Include="..\Src\UnitTests\hellotriangle2.h" />
+    <ClInclude Include="..\Src\UnitTests\instancing_asteroids_instanced.h" />
+    <ClInclude Include="..\Src\UnitTests\model_rendered.h" />
+    <ClInclude Include="..\Src\UnitTests\normal_mapping.h" />
+    <ClInclude Include="..\Src\UnitTests\shadow_mapping.h" />
+    <ClInclude Include="..\Src\UnitTests\ssao.h" />
+    <ClInclude Include="..\Src\UnitTests\test_bloom.h" />
+    <ClInclude Include="..\Src\UnitTests\test_camera.h" />
+    <ClInclude Include="..\Src\UnitTests\test_deferred_shading.h" />
+    <ClInclude Include="..\Src\UnitTests\test_framebuffer.h" />
+    <ClInclude Include="..\Src\UnitTests\test_model.h" />
+    <ClInclude Include="..\Src\UnitTests\test_model_animation.h" />
+    <ClInclude Include="..\Src\UnitTests\test_shadow_mapping.h" />
+    <ClInclude Include="..\Src\UnitTests\test_ssao.h" />
+    <ClInclude Include="..\Src\UnitTests\test_texture.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Data\shaders\bloom_blur.frag" />
+    <None Include="..\Data\shaders\bloom_blur.vs" />
+    <None Include="..\Data\shaders\bloom_debug_quad.frag" />
+    <None Include="..\Data\shaders\bloom_debug_quad.vs" />
+    <None Include="..\Data\shaders\bloom_final.frag" />
+    <None Include="..\Data\shaders\bloom_final.vs" />
+    <None Include="..\Data\shaders\bloom_pass1.frag" />
+    <None Include="..\Data\shaders\bloom_pass1.vs" />
+    <None Include="..\Data\shaders\bloom_pass1_drawlight.frag" />
+    <None Include="..\Data\shaders\coordinate_systems.frag" />
+    <None Include="..\Data\shaders\coordinate_systems.vs" />
+    <None Include="..\Data\shaders\deferred_light_box.frag" />
+    <None Include="..\Data\shaders\deferred_light_box.vs" />
+    <None Include="..\Data\shaders\deferred_shading.frag" />
+    <None Include="..\Data\shaders\deferred_shading.vs" />
+    <None Include="..\Data\shaders\fullscreen_quad.frag" />
+    <None Include="..\Data\shaders\fullscreen_quad.vs" />
+    <None Include="..\Data\shaders\gamma_correct.frag" />
+    <None Include="..\Data\shaders\gamma_correct.vs" />
+    <None Include="..\Data\shaders\geometry_shader.frag" />
+    <None Include="..\Data\shaders\geometry_shader.gs" />
+    <None Include="..\Data\shaders\geometry_shader.vs" />
+    <None Include="..\Data\shaders\g_buffer.frag" />
+    <None Include="..\Data\shaders\g_buffer.vs" />
+    <None Include="..\Data\shaders\instanced_asteroids.frag" />
+    <None Include="..\Data\shaders\instanced_asteroids.vs" />
+    <None Include="..\Data\shaders\normal_mapping.frag" />
+    <None Include="..\Data\shaders\normal_mapping.vs" />
+    <None Include="..\Data\shaders\planet.frag" />
+    <None Include="..\Data\shaders\planet.vs" />
+    <None Include="..\Data\shaders\skeleton_mesh.frag" />
+    <None Include="..\Data\shaders\skeleton_mesh.vs" />
+    <None Include="..\Data\shaders\test_deferred_light_box.frag" />
+    <None Include="..\Data\shaders\test_deferred_light_box.vs" />
+    <None Include="..\Data\shaders\test_deferred_shading.frag" />
+    <None Include="..\Data\shaders\test_deferred_shading.vs" />
+    <None Include="..\Data\shaders\test_g_buffer.frag" />
+    <None Include="..\Data\shaders\test_g_buffer.vs" />
+    <None Include="..\Data\shaders\test_model.frag" />
+    <None Include="..\Data\shaders\test_model.vs" />
+    <None Include="..\Data\shaders\test_shadow_mapping_lighting.frag" />
+    <None Include="..\Data\shaders\test_shadow_mapping_lighting.vs" />
+    <None Include="..\Data\shaders\test_shadow_mapping_depth.frag" />
+    <None Include="..\Data\shaders\test_shadow_mapping_depth.vs" />
+    <None Include="..\Data\shaders\test_shadow_mapping_showdepth.frag" />
+    <None Include="..\Data\shaders\test_shadow_mapping_showdepth.vs" />
+    <None Include="..\Data\shaders\test_ssao.frag" />
+    <None Include="..\Data\shaders\test_ssao.vs" />
+    <None Include="..\Data\shaders\test_ssao_blur.frag" />
+    <None Include="..\Data\shaders\test_ssao_gbuffer.frag" />
+    <None Include="..\Data\shaders\test_ssao_gbuffer.vs" />
+    <None Include="..\Data\shaders\test_ssao_lighting.frag" />
+    <None Include="..\Data\shaders\test_texture.frag" />
+    <None Include="..\Data\shaders\test_texture.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

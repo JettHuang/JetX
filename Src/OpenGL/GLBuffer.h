@@ -28,6 +28,8 @@ public:
 
 	void UnLock();
 
+	GLuint GetGLResource() const { return Name; }
+
 protected:
 	FOpenGLDrv		&Owner;
 	GLuint			Name;
@@ -52,10 +54,17 @@ public:
 class FOpenGLIndexBuffer : public FOpenGLBuffer
 {
 public:
-	FOpenGLIndexBuffer(FOpenGLDrv &InOwner, GLsizeiptr InSize, const GLvoid *InData, GLenum InUsage = GL_STATIC_DRAW)
+	FOpenGLIndexBuffer(FOpenGLDrv &InOwner, GLsizeiptr InSize, const GLvoid *InData, GLuint InStride, GLenum InUsage = GL_STATIC_DRAW)
 		: FOpenGLBuffer(InOwner, GL_ELEMENT_ARRAY_BUFFER, InSize, InData, InUsage)
+		, Stride(InStride)
 	{
 	}
+
+	// the stride must be 2 or 4
+	GLuint GetStride() { return Stride; }
+
+protected:
+	GLuint	Stride;
 };
 
 typedef TRefCountPtr<FOpenGLVertexBuffer>	FOpenGLVertexBufferRef;

@@ -121,6 +121,8 @@ public:
 	bool IsValid() const;
 	void DumpDebugInfo();
 
+	GLint GetParamLocation(const std::string &InParamName) const;
+
 private:
 	GLuint		Resource;
 	GLint		LinkStatus;
@@ -134,5 +136,6 @@ private:
 };
 
 typedef TRefCountPtr<FOpenGLProgram>	FOpenGLProgramRef;
+
 
 #endif // __JETX_GL_SHADER_H__

@@ -9,11 +9,15 @@ NOTE: I will make a engine with "from bottom to top" method.
    d. Shader & ProgramRHI
    e. VertexDeclarationRHI
    f. Stream Source
-   
+   g. texture
+
 2. CPU Resource
    a. VertexBuffer
-   b. VertexFactory
-   
+   b. IndexBuffer
+   c. VertexFactory
+   d. texture
+   e. material
+
 
    
 

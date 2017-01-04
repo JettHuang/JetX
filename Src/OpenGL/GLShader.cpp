@@ -156,3 +156,18 @@ void FOpenGLProgram::DumpDebugInfo()
 	}
 }
 
+GLint FOpenGLProgram::GetParamLocation(const std::string &InParamName) const
+{
+	std::vector<FOpenGLUniformParam>::const_iterator It = Uniforms.begin();
+
+	for (; It != Uniforms.end(); It++)
+	{
+		const FOpenGLUniformParam &Entry = *It;
+		if (InParamName == Entry.Name)
+		{
+			return Entry.Location;
+		}
+	} // end for It
+
+	return -1;
+}

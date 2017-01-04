@@ -348,9 +348,17 @@ bool FOpenGLDrv::Initialize()
 	return true;
 }
 
+void FOpenGLDrv::DeferredInitialize()
+{
+	CachedBindSharedVertexArrayObject();
+}
+
 void FOpenGLDrv::Terminate()
 {
-
+	if (CurrentState.SharedVertexArray == 0)
+	{
+		glDeleteVertexArrays(1, &CurrentState.SharedVertexArray);
+	}
 }
 
 void FOpenGLDrv::CheckError(const char* FILE, int LINE)
@@ -359,7 +367,8 @@ void FOpenGLDrv::CheckError(const char* FILE, int LINE)
 
 	if (Error != GL_NO_ERROR)
 	{
-		std::cout << "OpenGL Error: " << FILE << " At Line: " << LINE << ", Error-Code=" << Error;
+		std::cout << "OpenGL Error: " << FILE << " At Line: " << LINE << ", Error-Code=" << Error
+			<< " --- " << LookupErrorCode(Error) << std::endl;
 	}
 }
 
@@ -368,9 +377,9 @@ FOpenGLVertexBufferRef FOpenGLDrv::CreateVertexBuffer(GLsizeiptr InSize, const G
 	return new FOpenGLVertexBuffer(*this, InSize, InData, InUsage);
 }
 
-FOpenGLIndexBufferRef FOpenGLDrv::CreateIndexBuffer(GLsizeiptr InSize, const GLvoid *InData, GLenum InUsage)
+FOpenGLIndexBufferRef FOpenGLDrv::CreateIndexBuffer(GLsizeiptr InSize, const GLvoid *InData, GLuint InStride, GLenum InUsage)
 {
-	return new FOpenGLIndexBuffer(*this, InSize, InData, InUsage);
+	return new FOpenGLIndexBuffer(*this, InSize, InData, InStride, InUsage);
 }
 
 FOpenGLVertexShaderRef FOpenGLDrv::CreateVertexShader(const GLchar *InSource, GLint InLength)
@@ -388,18 +397,385 @@ FOpenGLProgramRef FOpenGLDrv::CreateProgram(const FOpenGLVertexShaderRef &InVert
 	return new FOpenGLProgram((FOpenGLVertexShader*)InVertexShader, (FOpenGLPixelShader*)InPixelShader);
 }
 
+FOpenGLVertexDeclarationRef FOpenGLDrv::CreateVertexDeclaration(const FVertexElementsList &InVertexElements)
+{
+	return new FOpenGLVertexDeclaration(InVertexElements);
+}
+
+FOpenGLTexture2DRef FOpenGLDrv::CreateTexture2D(GLint InInternalFormat, GLsizei InWidth, GLsizei InHeight, GLenum InDataFormat, GLenum InDataType, const GLvoid* InData)
+{
+	return new FOpenGLTexture2D(*this, InInternalFormat, InWidth, InHeight, InDataFormat, InDataType, InData);
+}
+
+FOpenGLRenderBufferRef FOpenGLDrv::CreateRenderBuffer(GLenum InInternalformat, GLsizei InWidth, GLsizei InHeight)
+{
+	return new FOpenGLRenderBuffer(*this, InInternalformat, InWidth, InHeight);
+}
+
+FOpenGLFrameBufferRef FOpenGLDrv::CreateFrameBuffer()
+{
+	return new FOpenGLFrameBuffer(*this);
+}
+
+// Operation State
+void FOpenGLDrv::SetClearColor(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
+{
+	glClearColor(r, g, b, a);
+}
+
+void FOpenGLDrv::ClearBuffer(GLbitfield mask)
+{
+	glClear(mask);
+}
+
+void FOpenGLDrv::SetStreamSource(GLuint StreamIndex, const FOpenGLVertexBufferRef &InVertexBuffer)
+{
+	assert(StreamIndex < NUM_GL_STREAM_SOURCE);
+
+	PendingState.VertexStreams[StreamIndex].VertexBuffer = (FOpenGLVertexBuffer*)InVertexBuffer;
+}
+
+void FOpenGLDrv::SetVertexDeclaration(const FOpenGLVertexDeclarationRef &InVertexDecl)
+{
+	PendingState.VertexDeclaration = (FOpenGLVertexDeclaration*)InVertexDecl;
+}
+
+void FOpenGLDrv::SetShaderProgram(const FOpenGLProgramRef &InProgram)
+{
+	PendingState.BindProgram = 0;
+	PendingState.ShaderProgram = (FOpenGLProgram*)InProgram;
+	if (PendingState.ShaderProgram)
+	{
+		PendingState.BindProgram = InProgram->GetGLResource();
+	}
+}
+
+void FOpenGLDrv::SetShaderProgramParameters(FProgramParameters *InParameters)
+{
+	PendingState.ShaderParameters = InParameters;
+}
+
+void FOpenGLDrv::SetTexture2D(GLuint TexIndex, const FOpenGLTexture2DRef &InTexture)
+{
+	assert(TexIndex < NUM_GL_TEXTURE_UNITS);
+	PendingState.Texture2DStages[TexIndex].Texture2DRef = InTexture;
+}
+
+void FOpenGLDrv::SetFrameBuffer(const FOpenGLFrameBufferRef &InFrameBuffer)
+{
+	GLuint Resource = 0; // default buffer
+
+	if (IsValidRef(InFrameBuffer))
+	{
+		Resource = InFrameBuffer->GetGLResource();
+	}
+
+	CachedBindFrameBuffer(GL_FRAMEBUFFER, Resource);
+}
+
+void FOpenGLDrv::BlitFramebuffer(const FOpenGLFrameBufferRef &InSrcFrameBuffer, const FOpenGLFrameBufferRef &InDstFrameBuffer, GLint InWidth, GLint InHeight,
+	GLbitfield InMask, GLenum InFilter)
+{
+	GLuint Src = 0, Dst = 0;
+
+	if (IsValidRef(InSrcFrameBuffer))
+	{
+		Src = InSrcFrameBuffer->GetGLResource();
+	}
+	if (IsValidRef(InDstFrameBuffer))
+	{
+		Dst = InDstFrameBuffer->GetGLResource();
+	}
+
+	CachedBindFrameBuffer(GL_READ_FRAMEBUFFER, Src);
+	CachedBindFrameBuffer(GL_DRAW_FRAMEBUFFER, Dst);
+	glBlitFramebuffer(0, 0, InWidth, InHeight, 0, 0, InWidth, InHeight, InMask, InFilter);
+}
+
+void FOpenGLDrv::DrawIndexedPrimitive(const FOpenGLIndexBufferRef &InIndexBuffer, GLenum InMode, GLuint InStart, GLsizei InCount)
+{
+	// bind shader program
+	SetupPendingShaderProgram();
+	// Set Program Parameters
+	SetupPendingShaderProgramParameters();
+	// Bind Vertex Attributes
+	SetupPendingVertexAttributeArray();
+	// Setup Texture
+	SetupPendingTexture();
+
+	GLenum IndexType = InIndexBuffer->GetStride() == sizeof(GLushort) ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT;
+	GLuint StartPtr = InStart * InIndexBuffer->GetStride();
+	CachedBindBuffer(GL_ELEMENT_ARRAY_BUFFER, InIndexBuffer->GetGLResource());
+	glDrawElements(InMode, InCount, IndexType, (GLvoid*)StartPtr);
+	CheckError(__FILE__, __LINE__);
+}
+
+void FOpenGLDrv::DrawArrayedPrimitive(GLenum InMode, GLint InStart, GLsizei InCount)
+{
+	// bind shader program
+	SetupPendingShaderProgram();
+	// Set Program Parameters
+	SetupPendingShaderProgramParameters();
+	// Bind Vertex Attributes
+	SetupPendingVertexAttributeArray();
+	// Setup Texture
+	SetupPendingTexture();
+
+	glDrawArrays(InMode, InStart, InCount);
+	CheckError(__FILE__, __LINE__);
+}
+
+void FOpenGLDrv::SetupPendingShaderProgram()
+{
+	assert(PendingState.ShaderProgram);
+	if (CurrentState.BindProgram != PendingState.BindProgram)
+	{
+		glUseProgram(PendingState.BindProgram);
+		CheckError(__FILE__, __LINE__);
+
+		CurrentState.BindProgram = PendingState.BindProgram;
+	}
+}
+
+void FOpenGLDrv::SetupPendingVertexAttributeArray()
+{
+	assert(PendingState.VertexDeclaration);
+	GLboolean VertexAttrisEnables[NUM_GL_VERTEX_ATTRIS] = { GL_FALSE };
+	const FOpenGLVertexElementsList &VertexElementList = PendingState.VertexDeclaration->GLVertexElements;
+	for (size_t Index = 0; Index < VertexElementList.size(); Index++)
+	{
+		const FOpenGLVertexElement &Element = VertexElementList[Index];
+		const GLuint kStreamIndex = Element.StreamIndex;
+		const GLuint kAttriIndex = Element.AttributeIndex;
+
+		assert(kStreamIndex < NUM_GL_STREAM_SOURCE);
+		assert(kAttriIndex < NUM_GL_VERTEX_ATTRIS);
+		FOpenGLVertexBuffer *SourceStream = PendingState.VertexStreams[kStreamIndex].VertexBuffer;
+		assert(SourceStream);
+
+		CachedEnableVertexAttributePointer(SourceStream->GetGLResource(), Element);
+		VertexAttrisEnables[kAttriIndex] = GL_TRUE;
+	} // end for
+	for (GLuint Index = 0; Index < NUM_GL_VERTEX_ATTRIS; Index++)
+	{
+		if (VertexAttrisEnables[Index] == GL_FALSE && CurrentState.CachedAttris[Index].Enabled)
+		{
+			glDisableVertexAttribArray(Index);
+			CheckError(__FILE__, __LINE__);
+			CurrentState.CachedAttris[Index].Enabled = GL_FALSE;
+		}
+	} // end for
+}
+
+void FOpenGLDrv::CachedEnableVertexAttributePointer(GLuint InBuffer, const FOpenGLVertexElement &InVertexElement)
+{
+	const GLuint kAttriIndex = InVertexElement.AttributeIndex;
+	FOpenGLCachedAttri &CurrentAttri = CurrentState.CachedAttris[kAttriIndex];
+
+	if (CurrentAttri.Buffer != InBuffer ||
+		CurrentAttri.Type != InVertexElement.Type ||
+		CurrentAttri.Size != InVertexElement.Size ||
+		CurrentAttri.Stride != InVertexElement.Stride ||
+		CurrentAttri.Offset != InVertexElement.Offset ||
+		CurrentAttri.Normalized != InVertexElement.Normalized)
+	{
+		CachedBindBuffer(GL_ARRAY_BUFFER, InBuffer);
+		if (InVertexElement.ShouldConvertToFloat)
+		{
+			glVertexAttribPointer(kAttriIndex, InVertexElement.Size, InVertexElement.Type, InVertexElement.Normalized, InVertexElement.Stride, (GLvoid*)InVertexElement.Offset);
+		}
+		else
+		{
+			glVertexAttribIPointer(kAttriIndex, InVertexElement.Size, InVertexElement.Type, InVertexElement.Stride, (GLvoid*)InVertexElement.Offset);
+		}
+		CheckError(__FILE__, __LINE__);
+
+		CurrentAttri.Buffer = InBuffer;
+		CurrentAttri.Type = InVertexElement.Type;
+		CurrentAttri.Size = InVertexElement.Size;
+		CurrentAttri.Stride = InVertexElement.Stride;
+		CurrentAttri.Offset = InVertexElement.Offset;
+		CurrentAttri.Normalized = InVertexElement.Normalized;
+	}
+
+	if (!CurrentAttri.Enabled)
+	{
+		glEnableVertexAttribArray(kAttriIndex);
+		CheckError(__FILE__, __LINE__);
+
+		CurrentAttri.Enabled = GL_TRUE;
+	}
+}
+
+void FOpenGLDrv::CachedBindSharedVertexArrayObject()
+{
+	if (CurrentState.SharedVertexArray == 0)
+	{
+		glGenVertexArrays(1, &CurrentState.SharedVertexArray);
+		glBindVertexArray(CurrentState.SharedVertexArray);
+	}
+}
+
+void FOpenGLDrv::SetupPendingTexture()
+{
+	for (int Index = 0; Index < NUM_GL_TEXTURE_UNITS; Index++)
+	{
+		FOpenGLTexture2D *Texture = (FOpenGLTexture2D*)(PendingState.Texture2DStages[Index].Texture2DRef);
+		if (!Texture)
+		{
+			CachedBindTextrue(Index, GL_TEXTURE_2D, 0);
+			continue;
+		}
+
+		CachedBindTextrue(Index, GL_TEXTURE_2D, Texture->GetGLResource());
+	} // end for
+}
+
+void FOpenGLDrv::SetupPendingShaderProgramParameters()
+{
+	FProgramParameters *Parameters = PendingState.ShaderParameters;
+	FOpenGLProgram *Program = PendingState.ShaderProgram;
+
+	assert(Program);
+	if (Parameters)
+	{
+		for (FProgramParameters::const_iterator It = Parameters->begin(); It != Parameters->end(); It++)
+		{
+			FShaderParameter *Param = *It;
+			assert(Param);
+			Param->ApplyValue(*Program);
+			CheckError(__FILE__, __LINE__);
+		} // end for
+	}
+}
+
 // bind gl-buffer
 void FOpenGLDrv::CachedBindBuffer(GLenum InType, GLuint InName)
 {
-
+	switch (InType)
+	{
+	case GL_ARRAY_BUFFER:
+	{
+		if (CurrentState.BindVertexBuffer != InName)
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, InName);
+			CheckError(__FILE__, __LINE__);
+			CurrentState.BindVertexBuffer = InName;
+		}
+	}
+	break;
+	case GL_ELEMENT_ARRAY_BUFFER:
+	{
+		if (CurrentState.BindIndexBuffer != InName)
+		{
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, InName);
+			CheckError(__FILE__, __LINE__);
+			CurrentState.BindIndexBuffer = InName;
+		}
+	}
+	break;
+	default:
+		std::cout << "Error: Not Implement Type In CachedBindBuffer()" << std::endl;
+		assert(false);
+		break;
+	}
 }
 
 void FOpenGLDrv::OnDeleteBuffer(GLenum InType, GLuint InName)
 {
-
+	switch (InType)
+	{
+	case GL_ARRAY_BUFFER:
+	{
+		if (CurrentState.BindVertexBuffer == InName)
+		{
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			CurrentState.BindVertexBuffer = 0;
+		}
+	}
+	break;
+	case GL_ELEMENT_ARRAY_BUFFER:
+	{
+		if (CurrentState.BindIndexBuffer == InName)
+		{
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+			CurrentState.BindIndexBuffer = 0;
+		}
+	}
+	break;
+	default:
+		std::cout << "Error: Not Implement Type In OnDeleteBuffer()" << std::endl;
+		assert(false);
+		break;
+	}
 }
 
+void FOpenGLDrv::CachedBindTextrue(GLuint InTexUnit, GLenum InTarget, GLuint InTexName)
+{
+	assert(InTexUnit < NUM_GL_TEXTURE_UNITS);
+	if (InTexUnit != CurrentState.ActivetTexUnitIndex)
+	{
+		glActiveTexture(GL_TEXTURE0 + InTexUnit);
+		CurrentState.ActivetTexUnitIndex = InTexUnit;
+		CheckError(__FILE__, __LINE__);
+	}
+
+	FOpenGLSamplerState &SamplerState = CurrentState.Texture2DUnits[InTexUnit];
+	if (SamplerState.Texture != InTexName)
+	{
+		assert(InTarget == GL_TEXTURE_2D);
+		glBindTexture(InTarget, InTexName);
+		SamplerState.Texture = InTexName;
+		CheckError(__FILE__, __LINE__);
+	}
+}
+
+// bind-render-buffer
+void FOpenGLDrv::CachedBindRenderBuffer(GLuint InName)
+{
+	if (InName != CurrentState.BindRenderBuffer)
+	{
+		glBindRenderbuffer(GL_RENDERBUFFER, InName);
+		CurrentState.BindRenderBuffer = InName;
+	}
+}
+
+// bind-frame-buffer
+void FOpenGLDrv::CachedBindFrameBuffer(GLenum InTarget, GLuint InName)
+{
+	assert(InTarget == GL_FRAMEBUFFER || InTarget == GL_DRAW_FRAMEBUFFER || InTarget == GL_READ_FRAMEBUFFER);
+	if (InTarget == GL_FRAMEBUFFER)
+	{
+		if (CurrentState.BindReadFrameBuffer != InName
+			|| CurrentState.BindDrawFrameBuffer != InName)
+		{
+			glBindFramebuffer(InTarget, InName);
+			CurrentState.BindReadFrameBuffer = InName;
+			CurrentState.BindDrawFrameBuffer = InName;
+		}
+	}
+	else if (InTarget == GL_DRAW_FRAMEBUFFER)
+	{
+		if (CurrentState.BindDrawFrameBuffer != InName)
+		{
+			glBindFramebuffer(InTarget, InName);
+			CurrentState.BindDrawFrameBuffer = InName;
+		}
+	} 
+	else
+	{
+		if (CurrentState.BindReadFrameBuffer != InName)
+		{
+			glBindFramebuffer(InTarget, InName);
+			CurrentState.BindReadFrameBuffer = InName;
+		}
+	}
+}
+
+
+//////////////////////////////////////////////////////////////////////////
 // helpers
+
 struct FTypeNamePair
 {
 	GLenum	Type;
@@ -577,6 +953,32 @@ const GLchar* FOpenGLDrv::LookupShaderUniformTypeName(GLenum InType)
 	{
 		const FTypeNamePair &Element = kTypeNames[Index];
 		if (Element.Type == InType)
+		{
+			return Element.Name;
+		}
+	} // end for
+
+	return kUnknown;
+}
+
+const GLchar* FOpenGLDrv::LookupErrorCode(GLenum InError)
+{
+	static const FTypeNamePair kTypeNames[] =
+	{
+		DEF_TYPENAME_PAIR(GL_NO_ERROR),
+		DEF_TYPENAME_PAIR(GL_INVALID_ENUM),
+		DEF_TYPENAME_PAIR(GL_INVALID_VALUE),
+		DEF_TYPENAME_PAIR(GL_INVALID_OPERATION),
+		DEF_TYPENAME_PAIR(GL_INVALID_FRAMEBUFFER_OPERATION),
+		DEF_TYPENAME_PAIR(GL_OUT_OF_MEMORY),
+		DEF_TYPENAME_PAIR(GL_STACK_UNDERFLOW),
+		DEF_TYPENAME_PAIR(GL_STACK_OVERFLOW)
+	};
+
+	for (GLint Index = 0; Index < DEF_ARRAYCOUNT(kTypeNames); Index++)
+	{
+		const FTypeNamePair &Element = kTypeNames[Index];
+		if (Element.Type == InError)
 		{
 			return Element.Name;
 		}
